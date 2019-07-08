@@ -1,7 +1,5 @@
-#ifndef __DLST_H__
-#define __DLST_H__
-#include<stdlib.h>
-#include<string.h>
+#ifndef __DLIST_H__
+#define __DLIST_H__
 struct dlist_elmt {
 	struct dlist_elmt * prev;
 	struct dlist_elmt * next;

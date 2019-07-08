@@ -1,71 +1,167 @@
 #include "llst.h"
-llst_t * erase(llst_t * element,uint8_t favor_first)
+
+int dlist_size(dlist_t * dlist)
 {
-	llst_t * out = 0;
-	if (element->prev != 0 && element->next != 0)
-	{
-		((llst_t *)element->prev)->next = element->next;
-		((llst_t *)element->next)->prev = element->prev;
-		if(favor_first)
-			out = (llst_t *) element->prev;
-		else
-			out = (llst_t *) element->next;
-	} 
-	else if (element->prev != 0 && element->next == 0)
-	{
-		((llst_t *)element->prev)->next = 0;
-		out = (llst_t *) element->prev;
-	}
-	else if (element->prev == 0 && element->next != 0)
-	{
-		((llst_t *)element->next)->prev = 0;
-		out = (llst_t *) element->next;
-	}
-	// if both are zero, and this is the only element, just delete.
-
-	free(element->content);
-	free(element);
-
-	return out;
+  return dlist->sz;
+}
+dlist_elmt_t * dlist_head(dlist_t * dlist)
+{
+  return dlist->head;
+}
+dlist_elmt_t * dlist_tail(dlist_t * dlist)
+{
+  return dlist->tail;
+}
+int dlist_is_head(dlist_t * dlist, dlist_elmt_t * element)
+{
+  return dlist->head == element ? 1 : 0;
+}
+int dlist_is_tail(dlist_t * dlist, dlist_elmt_t * element)
+{
+  return dlist->tail == element ? 1 : 0;
+}
+void * dlist_obj(dlist_elmt_t * element)
+{
+  return element->obj;
+}
+dlist_elmt_t * dlist_next(dlist_elmt_t * element)
+{
+  return element->next;
+}
+dlist_elmt_t * dlist_prev(dlist_elmt_t * element)
+{
+  return element->prev;
+}
+void dlist_init(dlist_t * dlist, int (*destroy) (void * obj))
+{
+    dlist->sz = 0;
+    dlist->destroy = destroy;
+    dlist->match = NULL;
+    dlist->head = NULL;
+    dlist->tail = NULL;
 }
 
-llst_t * tail(llst_t * list)
+void dlist_destroy(dlist_t * dlist)
 {
-	if(list->next == 0)
-		return list;
-
-	llst_t * cursor = (llst_t *) list->next;
-	while(cursor->next != 0)
-		cursor = (llst_t *) cursor->next;
-	return cursor;
+  void * obj;
+  while(dlist_size(dlist) > 0) {
+    if(dlist_rm(dlist,dlist->head,(void **) &obj) == 0 && dlist->destroy != NULL)
+      dlist->destroy(obj);
+  }
+  memset(dlist,0,sizeof(dlist));
+  return;
 }
 
-llst_t * head(llst_t * list)
+int dlist_rm(dlist_t * dlist, dlist_elmt_t * element, void ** obj)
 {
-	if(list->prev == 0)
-		return list;
+  dlist_elmt_t * old_element;
 
-	llst_t * cursor = (llst_t *) list->prev;
-	while(cursor->prev != 0)
-		cursor = (llst_t *) cursor->prev;
-	return cursor;
+  if(dlist_size(dlist) == 0 || element == NULL)
+    return -1;
+
+  if(element->next == NULL)
+    dlist->tail = element->prev;
+  if(element->prev == NULL)
+    dlist->head = element->next;
+
+
+  *obj = old_element->obj;
+
+  if(element == dlist->head)
+  {
+    dlist->head = element->next;
+
+    if(dlist->head == NULL)
+      dlist->tail = NULL;
+    else
+      dlist->head->prev = NULL;
+  }
+  else
+  {
+    element->prev->next = element->next;
+
+    if(element->next == NULL)
+      dlist->tail = element->prev;
+    else
+      element->next->prev = element->prev;
+  }
+
+  dlist->sz--;
+  free(element);
+  return 0;
 }
 
-llst_t * headn(llst_t * list, int n)
-{
-	llst_t * cursor = head(list);
 
-	int i = 0; 
-	for(int i = 0; i < n; i++){
-		if(cursor->next == 0)
-			break;
-		cursor = (llst_t *) cursor->next;
-	}
+int dlist_pop(dlist_t * dlist, void ** obj)
+{
+  return dlist_rm(dlist,dlist->head,obj);
 }
 
-void d_llst(llst_t * list){
-	llst_t * tl = tail(list);
-	llst_t * cursor = erase(tl,1);
-	while(cursor != 0)
-		cursor = erase(cursor,1);
+int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+{
+  dlist_elmt_t * new_element;
+
+  if((new_element = (dlist_elmt_t *) malloc(sizeof(dlist_elmt_t))) == NULL)
+    return -1;
+
+  new_element->obj = (void *) obj;
+
+  if(dlist_size(dlist) == 0){
+
+    new_element->prev = NULL;
+    new_element->next = NULL;
+    dlist->head = new_element;
+    dlist->tail = new_element;
+
+  } else {
+
+    new_element->prev = element;
+    new_element->next = element->next;
+    element->next = new_element;
+
+    if(element->next == NULL)
+      dlist->tail = new_element;
+    else
+      element->next->prev = new_element;
+  }
+
+  dlist->sz++;
+  return 0;
+}
+
+int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+{
+  dlist_elmt_t * new_element;
+
+  if((new_element = (dlist_elmt_t *) malloc(sizeof(dlist_elmt_t))) == NULL)
+    return -1;
+
+  new_element->obj = (void *) obj;
+
+  if(dlist_size(dlist) == 0){
+
+    new_element->prev = NULL;
+    new_element->next = NULL;
+    dlist->head = new_element;
+    dlist->tail = new_element;
+
+  } else {
+    new_element->next = element;
+    new_element->prev = element->prev;
+    element->prev = new_element;
+
+    if(element->prev == NULL)
+      dlist->head = new_element;
+    else
+      element->prev->next = new_element;
+  }
+
+  dlist->sz++;
+  return 0;
+}
+
+
+int dlist_insert(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+{
+  return dlist_insert_next(dlist,element,obj);
 }

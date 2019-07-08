@@ -1,18 +1,16 @@
 .PHONY: all clean
 
 
-build/llst.o: src/llst.c src/llst.h
-	gcc -c src/llst.c -o build/llst.o
+build/dlist.o: src/dlist.c src/dlist.h
+	gcc -c src/dlist.c -o build/dlist.o
 
-lib/libvessels.a: build/llst.o
-	ar rcs lib/libvessels.a build/llst.o
+lib/libvessels.a: build/dlist.o
+	ar rcs lib/libvessels.a build/dlist.o
 
+app/list_demos: main/list_demos.c lib/libvessels.a
+	gcc -iquote src -Llib -lvessels main/list_demos.c -o app/list_demos
 
-
-app/llst_demo: main/llst_demo.c lib/libvessels.a
-	gcc -iquote src -Llib -lvessels main/llst_demo.c -o app/llst_demo
-
-all: app/llst_demo
+all: app/list_demos
 
 clean:
 	-rm app/*

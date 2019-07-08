@@ -1,7 +1,8 @@
 #include<stdlib.h>
 #include<string.h>
+#include"list.h"
 
-int list_size(dlist_t * list)
+int list_size(list_t * list)
 { return list->sz; }
 list_elmt_t * list_head(list_t * list)
 { return list->head; }

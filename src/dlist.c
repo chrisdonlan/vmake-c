@@ -1,3 +1,5 @@
+#include<stdlib.h>
+#include<string.h>
 #include "dlist.h"
 
 int dlist_size(dlist_t * dlist)

@@ -22,9 +22,9 @@ int dlist_is_tail(dlist_t * dlist, dlist_elmt_t * element)
 {
   return dlist->tail == element ? 1 : 0;
 }
-void * dlist_obj(dlist_elmt_t * element)
+void * dlist_o(dlist_elmt_t * element)
 {
-  return element->obj;
+  return element->o;
 }
 dlist_elmt_t * dlist_next(dlist_elmt_t * element)
 {
@@ -34,7 +34,7 @@ dlist_elmt_t * dlist_prev(dlist_elmt_t * element)
 {
   return element->prev;
 }
-void dlist_init(dlist_t * dlist, int (*destroy) (void * obj))
+void dlist_init(dlist_t * dlist, int (*destroy) (void * o))
 {
     dlist->sz = 0;
     dlist->destroy = destroy;
@@ -45,16 +45,16 @@ void dlist_init(dlist_t * dlist, int (*destroy) (void * obj))
 
 void dlist_destroy(dlist_t * dlist)
 {
-  void * obj;
+  void * o;
   while(dlist_size(dlist) > 0) {
-    if(dlist_rm(dlist,dlist->head,(void **) &obj) == 0 && dlist->destroy != NULL)
-      dlist->destroy(obj);
+    if(dlist_rm(dlist,dlist->head,(void **) &o) == 0 && dlist->destroy != NULL)
+      dlist->destroy(o);
   }
   memset(dlist,0,sizeof(dlist));
   return;
 }
 
-int dlist_rm(dlist_t * dlist, dlist_elmt_t * element, void ** obj)
+int dlist_rm(dlist_t * dlist, dlist_elmt_t * element, void ** o)
 {
   dlist_elmt_t * old_element;
 
@@ -67,7 +67,7 @@ int dlist_rm(dlist_t * dlist, dlist_elmt_t * element, void ** obj)
     dlist->head = element->next;
 
 
-  *obj = old_element->obj;
+  *o = old_element->o;
 
   if(element == dlist->head)
   {
@@ -94,19 +94,19 @@ int dlist_rm(dlist_t * dlist, dlist_elmt_t * element, void ** obj)
 }
 
 
-int dlist_pop(dlist_t * dlist, void ** obj)
+int dlist_pop(dlist_t * dlist, void ** o)
 {
-  return dlist_rm(dlist,dlist->head,obj);
+  return dlist_rm(dlist,dlist->head,o);
 }
 
-int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
   dlist_elmt_t * new_element;
 
   if((new_element = (dlist_elmt_t *) malloc(sizeof(dlist_elmt_t))) == NULL)
     return -1;
 
-  new_element->obj = (void *) obj;
+  new_element->o = (void *) o;
 
   if(dlist_size(dlist) == 0){
 
@@ -131,14 +131,14 @@ int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
   return 0;
 }
 
-int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
   dlist_elmt_t * new_element;
 
   if((new_element = (dlist_elmt_t *) malloc(sizeof(dlist_elmt_t))) == NULL)
     return -1;
 
-  new_element->obj = (void *) obj;
+  new_element->o = (void *) o;
 
   if(dlist_size(dlist) == 0){
 
@@ -163,7 +163,7 @@ int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
 }
 
 
-int dlist_insert(dlist_t * dlist, dlist_elmt_t * element, const void * obj)
+int dlist_insert(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
-  return dlist_insert_next(dlist,element,obj);
+  return dlist_insert_next(dlist,element,o);
 }

@@ -12,12 +12,12 @@ int list_is_head(list_t * list, list_elmt_t * element)
 { return element == list->head ? 1 : 0; }
 int list_is_tail(list_t * list, list_elmt_t * element)
 { return element == list->tail ? 1 : 0; }
-void * list_obj(list_elmt_t * element)
-{ return element->obj; }
+void * list_o(list_elmt_t * element)
+{ return element->o; }
 list_elmt_t * list_next(list_elmt_t * element)
 { return element->next; }
 
-void list_init(list_t * list, int (*destroy) (void * obj))
+void list_init(list_t * list, int (*destroy) (void * o))
 {
 	list->head = NULL;
 	list->tail = NULL;
@@ -28,17 +28,17 @@ void list_init(list_t * list, int (*destroy) (void * obj))
 
 void list_destroy(list_t * list)
 {
-	void * obj;
+	void * o;
 	while(list->sz > 0){
-		if(list_rm_next(list,NULL,obj) == 0 && list->destroy != NULL)
-			list->destroy(obj);
+		if(list_rm_next(list,NULL,o) == 0 && list->destroy != NULL)
+			list->destroy(o);
 	}
 	memset(list,0,sizeof(list_t));
 	return;
 }
 
 
-int list_rm_next(list_t * list, list_elmt_t * element, void ** obj)
+int list_rm_next(list_t * list, list_elmt_t * element, void ** o)
 {
 	list_elmt_t * old_element;
 
@@ -65,20 +65,20 @@ int list_rm_next(list_t * list, list_elmt_t * element, void ** obj)
 			list->tail = element;
 	}
 
-	obj = old_element->obj;
+	o = old_element->o;
 	free(old_element);
 	list->sz--;
 	return 0;
 }
 
-int list_insert_next(list_t * list, list_elmt_t * element, const void * obj)
+int list_insert_next(list_t * list, list_elmt_t * element, const void * o)
 {
 	list_elmt_t * new_element;
 
 	if((new_element = (list_elmt_t *) malloc(sizeof(list_elmt_t))) == NULL)
 		return -1;
 	
-	new_element->obj = (void *) obj;
+	new_element->o = (void *) o;
 
 	if(element == NULL)
 	{

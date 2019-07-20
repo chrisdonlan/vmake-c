@@ -1,5 +1,6 @@
 #ifndef __LIST_H__
 #define __LIST_H__
+#include <stddef.h>
 struct list_elmt {
   struct list_elmt * next;
   void * o;

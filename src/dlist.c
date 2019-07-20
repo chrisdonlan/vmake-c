@@ -99,7 +99,7 @@ int dlist_pop(dlist_t * dlist, void ** o)
   return dlist_rm(dlist,dlist->head,o);
 }
 
-int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * o)
+int dlist_ins_next(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
   dlist_elmt_t * new_element;
 
@@ -131,7 +131,7 @@ int dlist_insert_next(dlist_t * dlist, dlist_elmt_t * element, const void * o)
   return 0;
 }
 
-int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * o)
+int dlist_ins_prev(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
   dlist_elmt_t * new_element;
 
@@ -163,7 +163,7 @@ int dlist_insert_prev(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 }
 
 
-int dlist_insert(dlist_t * dlist, dlist_elmt_t * element, const void * o)
+int dlist_ins(dlist_t * dlist, dlist_elmt_t * element, const void * o)
 {
-  return dlist_insert_next(dlist,element,o);
+  return dlist_ins_next(dlist,element,o);
 }

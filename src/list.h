@@ -1,25 +1,24 @@
 #ifndef __LIST_H__
 #define __LIST_H__
-typedef struct list_elmt_ {
-	struct list_elmt_ * next;
-	void * o;
-} list_elmt_t;
+struct list_elmt {
+  struct list_elmt * next;
+  void * o;
+} typedef list_elmt_t;
 
-typedef struct list_ {
-	int sz;
-	list_elmt_t * head;
-	list_elmt_t * tail;
+struct list {
+  int sz;
+  list_elmt_t * head;
+  list_elmt_t * tail;
 
-	int (*match)(const void * key1, const void * key2);
-	int (*destroy)(void * o);
-} list_t;
-
+  int (*match)(const void * key1, const void * key2);
+  int (*destroy)(void * o);
+} typedef list_t;
 
 void list_init(list_t * list, int (*destroy) (void * o));
 void list_destroy(list_t * list);
 int list_rm_next(list_t * list, list_elmt_t * element, void ** o);
 
-int list_insert_next(list_t * list, list_elmt_t * element, const void * o);
+int list_ins_next(list_t * list, list_elmt_t * element, const void * o);
 
 
 int list_size(list_t * list);

@@ -1,13 +1,11 @@
 .PHONY: all clean
 
-build/list.o: src/list.c src/list.h
-	gcc -c src/list.c -o build/list.o
+.SECONDEXPANSION:
+build/%.o: src/$$*.c src/$$*.h
+	gcc -Isrc -c src/$*.c -o build/$*.o
 
-build/dlist.o: src/dlist.c src/dlist.h
-	gcc -c src/dlist.c -o build/dlist.o
-
-lib/libvessels.a: build/dlist.o build/list.o
-	ar rcs lib/libvessels.a build/dlist.o
+lib/libvessels.a: build/dlist.o build/list.o build/clist.o build/frames.o
+	ar rcs lib/libvessels.a build/*.o
 
 app/list_demos: main/list_demos.c lib/libvessels.a
 	gcc -iquote src -Llib -lvessels main/list_demos.c -o app/list_demos

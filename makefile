@@ -4,7 +4,7 @@
 build/%.o: src/$$*.c src/$$*.h
 	gcc -Isrc -c src/$*.c -o build/$*.o
 
-lib/libvessels.a: build/dlist.o build/list.o build/clist.o build/frames.o
+lib/libvessels.a: build/dlist.o build/list.o build/clist.o build/frames.o build/page.o
 	ar rcs lib/libvessels.a build/*.o
 
 app/list_demos: main/list_demos.c lib/libvessels.a

@@ -1,0 +1,7 @@
+# Advanced Lists, Queues and Stacks
+
+0. parallel list?
+1. Circular Queue
+	- Then, Ring Buffer  <-- You have to pay for this 
+	- Then, Parallel Ring Buffers <-- this...is hard to find.
+2. Parallel Queue

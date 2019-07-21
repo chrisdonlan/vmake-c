@@ -5,7 +5,7 @@ int receive_event(queue_t * events, const event_t * event){
   if((new_event = (event_t *) malloc(sizeof(event_t))) == NULL)
     return -1;
 
-  memcpy(event,new_event,sizeof(event_t));
+  memcpy((void *) event,new_event,sizeof(event_t));
 
   return queue_enqueue(events,new_event);
 }

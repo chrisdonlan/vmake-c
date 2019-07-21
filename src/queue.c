@@ -6,5 +6,5 @@ int queue_dequeue(queue_t * queue, void ** o){
   return list_rm_next((list_t *) queue,NULL,o);
 }
 void * queue_peek(const queue_t * queue){
-  return queue_t->head == NULL ? NULL : queue_t->head->o;
+  return queue->head == NULL ? NULL : queue->head->o;
 }

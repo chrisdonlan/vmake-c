@@ -17,7 +17,7 @@ void * list_o(list_elmt_t * element)
 list_elmt_t * list_next(list_elmt_t * element)
 { return element->next; }
 
-void list_init(list_t * list, int (*destroy) (void * o))
+void list_init(list_t * list, void (*destroy) (void * o))
 {
   list->head = NULL;
   list->tail = NULL;

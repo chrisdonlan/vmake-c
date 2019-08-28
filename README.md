@@ -7,3 +7,7 @@ other purposes.
 All rights reserved; and note that, until this code is a small component
 of a larger project, Oreilly reserves the right to require permission for
 use.  
+
+## Purpose
+
+This code slots into a larger framework (the Vmake projec)
